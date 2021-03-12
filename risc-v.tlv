@@ -78,20 +78,21 @@
    $funct7_valid = $is_r_instr;
    $imm_valid = ! $is_r_instr;
    
-   `BOGUS_USE($rd $rd_valid
-              $rs1 $rs1_valid
-              $rs2 $rs2_valid
-              $funct3 $funct3_valid
-              $funct7 $funct7_valid
-              $imm_valid
-              $opcode)
-   
    $imm[31:0] = $is_i_instr ? {  {21{$instr[31]}},  $instr[30:20]  } :
                 $is_s_instr ? {  {21{$instr[31]}},  $instr[30:25],  $instr[11:7]  } :
                 $is_b_instr ? {  {20{$instr[31]}},  $instr[7], $instr[30:25],  $instr[11:8], 1'b0  } :
                 $is_u_instr ? {  $instr[31],  $instr[30:12]  , 12'b0  } :
                 $is_j_instr ? {  {12{$instr[31]}},  $instr[19:12],  $instr[20],  $instr[30:21], 1'b0  } :
                               32'b0;  // Default
+   
+   `BOGUS_USE($rd $rd_valid
+              $rs1 $rs1_valid
+              $rs2 $rs2_valid
+              $funct3 $funct3_valid
+              $funct7 $funct7_valid
+              $imm
+              $imm_valid
+              $opcode)
    
    // decode operation
    $dec_bits[10:0] = {$funct7[5],$funct3,$opcode};
@@ -115,7 +116,7 @@
    *passed = 1'b0;
    *failed = *cyc_cnt > M4_MAX_CYC;
    
-   //m4+rf(32, 32, $reset, $wr_en, $wr_index[4:0], $wr_data[31:0], $rd1_en, $rd1_index[4:0], $rd1_data, $rd2_en, $rd2_index[4:0], $rd2_data)
+   // m4+rf(32, 32, $reset, $wr_en, $wr_index[4:0], $wr_data[31:0], $rd1_en, $rd1_index[4:0], $rd1_data, $rd2_en, $rd2_index[4:0], $rd2_data)
    //m4+dmem(32, 32, $reset, $addr[4:0], $wr_en, $wr_data[31:0], $rd_en, $rd_data)
    m4+cpu_viz()
 \SV
