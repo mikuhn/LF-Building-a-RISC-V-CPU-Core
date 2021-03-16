@@ -17,6 +17,8 @@
    // pc
    $next_pc[31:0] =
       $reset    ? 32'b0 :
+      $is_jalr  ? $jalr_tgt_pc :
+      $is_jal   ? $br_tgt_pc :
       $taken_br ? $br_tgt_pc :
                   $pc + 32'b100;
    $pc[31:0] =  >>1$next_pc;
@@ -105,7 +107,7 @@
    $is_or    = $dec_bits ==? 11'b0_110_0110011;
    $is_and   = $dec_bits ==? 11'b0_111_0110011;
    
-   $is_load = $opcode ==? 7'b0x0011;
+   $is_load = $opcode ==? 7'b0000011;
    
    `BOGUS_USE($is_beq $is_bne $is_blt
               $is_bge $is_bltu $is_bgeu
@@ -153,6 +155,7 @@
                      :
       $is_sra   ? $sra_rslt[31:0] :
       $is_srai  ? $srai_rslt[31:0] :
+      $is_load || $is_s_instr ? $src1_value + $imm :
                  32'b0; // Default
    
    // implement branch logic
@@ -168,14 +171,19 @@
                 0;
    
    $br_tgt_pc[31:0] = $pc + $imm;
+   $jalr_tgt_pc[31:0] = $src1_value + $imm;
+   
+   // mux register file write input
+   $rf_wr_data[31:0] = $is_load ? $ld_data : $result;
    
    // Assert these to end simulation (before Makerchip cycle limit).
    m4+tb()
    *failed = *cyc_cnt > M4_MAX_CYC;
    
    //m4+rf(32, 32, $reset, $wr_en, $wr_index[4:0], $wr_data[31:0], $rd1_en, $rd1_index[4:0], $rd1_data, $rd2_en, $rd2_index[4:0], $rd2_data)
-   m4+rf(32, 32, $reset, $rd_valid, $rd, $result, $rs1_valid, $rs1, $$src1_value, $rs2_valid, $rs2, $$src2_value)
+   m4+rf(32, 32, $reset, $rd_valid, $rd, $rf_wr_data, $rs1_valid, $rs1, $$src1_value, $rs2_valid, $rs2, $$src2_value)
    //m4+dmem(32, 32, $reset, $addr[4:0], $wr_en, $wr_data[31:0], $rd_en, $rd_data)
+   m4+dmem(32, 32, $reset, $result[6:2], $is_s_instr, $src2_value, $is_load, $$ld_data)
    m4+cpu_viz()
 \SV
    endmodule
