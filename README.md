@@ -19,7 +19,6 @@ To begin the first RISC-V lab, when instructed to do so, Ctrl-click this link to
 In case you get stuck, we've got your back! These <a href="https://makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FLF-Building-a-RISC-V-CPU-Core%2Fmain%2Frisc-v_solutions.tlv" target="_blank" atom_fix="_">reference solutions</a> (Ctrl-click) will help with syntax, etc. without handing you the answers.
 
 <a href="https://makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fmikuhn%2FLF-Building-a-RISC-V-CPU-Core%2Fmain%2Frisc-v.tlv" target="_blank" atom_fix="_">my solution</a>
-https://raw.githubusercontent.com/mikuhn/LF-Building-a-RISC-V-CPU-Core/main/risc-v.tlv
 
 Here's a pre-built logic diagram of the final CPU. Ctrl-click here to [explore in its own tab](https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core/main/lib/riscv.svg).
 
